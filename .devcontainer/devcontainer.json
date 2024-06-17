@@ -3,9 +3,12 @@
   "build": {
     "dockerfile": "./Dockerfile"
   },
-  "workspaceFolder": "/workspace", 
+  "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder}/src,target=/workspace,type=bind,consistency=cached",
   "extensions": [
     "Shopify.ruby-lsp"
+  ],
+  "appPort": [
+    "9000:5000"
   ]
 }
