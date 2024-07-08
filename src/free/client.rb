@@ -1,10 +1,14 @@
 require 'socket'
 require 'json'
 
+
+puts "IDを入力してください:"
+id = $stdin.gets.chomp
+
 # サーバーに接続
 TCPSocket.open("localhost", 5000) do |s|
   # リクエストを送信
-  s.print "GET /data1 HTTP/1.0\r\n"
+  s.print "GET /#{id} HTTP/1.0\r\n"
   s.print "\r\n"
 
   # レスポンスを受信
@@ -28,19 +32,27 @@ TCPSocket.open("localhost", 5000) do |s|
     # ボディをJSONとして解析
     begin
       data = JSON.parse(body)
-      
-      # JSONデータに応じた内容をコンソールに表示
-      if data["time"]
-        puts "Current Time: #{data["time"]}"
-      elsif data["name"] && data["email"]
-        puts "ID: #{data["id"]}, Name: #{data["name"]}, Email: #{data["email"]}"
-      elsif data["name"]
-        puts "Name: #{data["name"]}"
+
+      puts "パスワードを入力してください:"
+      pass = $stdin.gets.chomp
+
+      if pass == data["pass"]
+        if data["count"] == 0
+          puts "#{data["name"]}さん初めての訪問です！"
+        else
+          puts "#{data["name"]}さん#{data["count"] + 1}回目の訪問です！"
+        end
+        data["count"] = data["count"] + 1
+
+        File.open("free/#{data["id"]}.json", "w") { |f| JSON.dump(data, f) }
+
       else
-        puts "Error: #{data["error"]}"
+        puts "パスワードが違います"
       end
+      
     rescue JSON::ParserError => e
-      puts "Error parsing JSON: #{e.message}"
+        #JSON形式で送られてきていない場合
+      puts "そのIDは存在しません。"
     end
   end
 end

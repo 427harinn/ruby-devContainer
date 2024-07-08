@@ -1,5 +1,7 @@
 {
     "id": "data2",
     "name": "Bob",
-    "email": "bob@example.com"
+    "email": "bob@example.com",
+    "pass": "1234",
+    "count": 0
 }
