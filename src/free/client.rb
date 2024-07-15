@@ -49,9 +49,29 @@ TCPSocket.open("localhost", 5000) do |s|
         #jsonに書き込み
         File.open("free/#{data["id"]}.json", "w") { |f| JSON.dump(data, f) }
 
-      else
-        puts "パスワードが違います"
+        finish = false
+        while finish == false
+        puts "何をしますか？ 1.メールアドレス確認 2.パスワード変更 3.終了:"
+        input = $stdin.gets.chomp
+        if input == "1"
+          puts "あなたのメールアドレスは「#{data["email"]}」です。"
+        elsif input == "2"
+          puts "変更後のパスワードを入力してください。"
+          data["pass"] = $stdin.gets.chomp
+          #jsonに書き込み
+          File.open("free/#{data["id"]}.json", "w") { |f| JSON.dump(data, f) }
+          puts "パスワードが変更されました。"
+        elsif input == "3"
+          puts "終了します。"
+          finish = true
+        else
+          puts "実行できません"
+        end
       end
+        else
+          puts "パスワードが違います"
+      end
+    
       
     rescue JSON::ParserError => e
         #JSON形式に変換できる形で送られてきていない場合
